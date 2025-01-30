@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        button {
+            background-color: aqua;
+            border-radius:6px;
+        }
+
+            button:hover {
+                width: 175px;
+                height: 30px;
+                background-color: deeppink;
+            }
+
+        h2 {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode';
+            color: blue;
+        }
+
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: lightgreen;
+        }
+
+        #content {
+            background-color: violet;
+            border: 2px solid brown;
+            border-radius:8px;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h2>Change Your Password By Using Name</h2>
+        <form id="admpsw">
+            <label>Enter Your name:</label>
+            <input type="text" id="aname" placeholder="Enter Your Name" />
+            <br /><br />
+            <label>Enter The New Password:</label>
+            <input type="password" id="apsd" placeholder="Enter Your Password" />
+            <br /><br />
+            <button type="submit">ChangeAdminPassword</button>
+        </form>
+        </div>
+        <script>
+            document.getElementById("admpsw").addEventListener('submit', function (event) {
+                event.preventDefault();
+                let key = 'adminkey'
+                const formdata = {
+                    name: document.getElementById("aname").value,
+                    password: document.getElementById("apsd").value
+                }
+                console.log("-=-=-=", formdata)
+                if (formdata.name != "" && formdata.password != "") {
+                    console.log("hi")
+                    fetch(`/changePassword/${key}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formdata)
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Error: " + response.status + "::" + response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .then(data => {
+                            alert("Admin Password Updated Successfully");
+                            window.location.href = '/';
+                        })
+                        .catch(error => { alert("Admin Password Not changed", error) })
+                }
+                else {
+                    alert("Please Enter Valid Credential")
+                }
+            });
+        </script>
+</body>
+</html>

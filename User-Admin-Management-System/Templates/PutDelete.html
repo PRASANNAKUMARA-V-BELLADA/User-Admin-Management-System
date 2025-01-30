@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Put Delete Page</title>
+    <style>
+        .myform{
+            background-color:aqua;
+            padding:10px;
+            margin:20px;
+            border:2px solid red;
+        }
+        div{
+            background-color:yellow;
+            font-weight:bold;
+            font-size:45px;
+            padding:10px;
+        }
+    </style>
+</head>
+<body>
+    <form class="myform" action="/put" method="post">
+        <h1>Updating The Employee</h1>
+        <label>Enter The Id For Updating The Employee:</label>
+        <input type="number" name="id" />
+        <br /><br />
+        <label>Update Your Password:</label>
+        <input type="text" name="password" />
+        <br /><br />
+        <input type="submit" />
+    </form>
+    <form class="myform" action="/delete" method="post">
+        <h1>Deleting The Employee</h1>
+        <label>Enter The Id For Deleting The Employee:</label>
+        <input type="number" name="id" />
+        <br /><br />
+        <input type="submit" />
+    </form>
+    <div id="response">{{message}}</div>
+</body>
+</html>

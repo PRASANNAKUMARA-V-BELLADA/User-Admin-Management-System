@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        button{
+            background-color:aqua;
+            border-radius:6px;
+        }
+        button:hover{
+            width:65px;
+            height:20px;
+            background-color:deeppink;
+        }
+        body {
+            background-image: url("https://media.istockphoto.com/id/1368151370/photo/user-typing-login-and-password-cyber-security-concept.jpg?s=612x612&w=0&k=20&c=hZ14F6Fa4edYWwg0BduAj0is8gdcORsBBHpQcQbAPKc=");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        #heading{
+            text-align:center;
+        }
+        #ocnt {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 190px;
+        }
+        #ucnt{
+            background-color: violet;
+            border: 2px solid brown;
+            padding: 10px;
+            text-align:center;
+            border-radius:8px;
+            margin:10px;
+            opacity:0.7;
+        }
+        #acnt {
+            background-color: lightblue;
+            border: 2px solid brown;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 10px;
+            opacity: 0.7;
+        }
+        a:hover{
+            color:blue;
+        }
+        a:link {
+            color: green;
+        }
+        a:active{
+            color:deeppink;
+        }
+       H1{
+          color:Blue;
+          font-family:Calibri;
+       }
+       #footer{
+           background-color:dimgray;
+           color:yellow;
+           text-align:center;
+           padding:10px;
+           opacity:0.5;
+       }
+
+       @media only screen and (min-width:723px) and (max-width:1023px){
+        body {
+            background-image: url("data:image/jpeg;base64,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");
+        }
+       }
+
+        @media only screen and (min-width:1024px) {
+            body {
+                background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRik-jtpwOdxTpJsZqo3TMTUFiNM5yCHM43XQ&s");
+                font-weight:bold;
+                }
+            #ucnt,#acnt{
+                color:black;
+            }
+        }
+    </style>
+</head>
+<body>
+        <div id="heading"><h1> WelCome To User-Admin Management</h1></div>
+        <div id="ocnt">
+            <div id="ucnt">
+                <form id="user">
+                    <h2 style="font-family:cursive">Welcome To User Login Page</h2>
+                    <label>Enter The User Name:</label>
+                    <input type="text" id="uname" name="name" placeholder="Enter Your Name" />
+                    <br><br>
+                    <label>Enter The password:</label>
+                    <input type="password" id="upsd" name="password" placeholder="Enter Your Password" />
+                    <br /><br />
+                    <a href="/user/forgot-password">Forgot Password? /</a>
+                    <a href="/register-madu">Register</a>
+                    <br /><br />
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            <div id="acnt">
+                <form id="admin">
+                    <h2 style="font-family:cursive">Welcome To Admin Login Page</h2>
+                    <label>Enter The User Name:</label>
+                    <input type="text" id="aname" name="name" placeholder="Enter Your Name" />
+                    <br><br>
+                    <label>Enter The password:</label>
+                    <input type="password" id="apsd" name="password" placeholder="Enter Your Password" />
+                    <br /><br />
+                    <a href="/admin/forgot-password">Forgot Password? /</a>
+                    <a href="/register-madu">Register?</a>
+                    <br /><br />
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="footer">
+            <footer>
+                <h3>Copyright@2025,All Rights Are Reserverd</h3>
+            </footer>
+        </div>
+    <!--- for myUform -->
+    <script>
+        document.getElementById("user").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById("uname").value,
+                password: document.getElementById("upsd").value
+            }
+            console.log("creating form", formData)
+            if (formData.name != "" && formData.password != "") {
+                fetch('/login', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        console.log(response.ok)
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                alert(errorData.message)
+                                throw new Error(errorData.message)
+                            })
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        let id = data.id
+
+                        console.log(data["Message"], "-------");
+                        if (data["Message"] != "admin") {
+                            alert("User Login Successfully");
+                            console.log(id + "////////")
+                            window.location.href = `/user-hogu/${id}`;
+                        }
+                        else {
+                            alert("You Are Not A User")
+                            throw new Error("You Are Not A User")
+                        }
+
+                    })
+                    .catch(error =>console.log(error))
+            }
+            else {
+                alert("Please Enter Valid Credential")
+            }
+
+        });
+
+    </script>
+
+    <!---myAform-->
+    <script>
+        document.getElementById("admin").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById("aname").value,
+                password: document.getElementById("apsd").value
+            }
+            console.log("creating form", formData.name)
+            if (formData.name != "" && formData.password != "") {
+                fetch('/login', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        console.log(response.ok)
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                alert(errorData.message)
+                                throw new Error(errorData.message)
+                            })
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        let id = data.id
+                        console.log(data["Message"], "-------");
+                        if (data["Message"] != "user") {
+                            alert("Admin Login Successfully");
+                            window.location.href = `/admin-hogu/${id}`;
+                        }
+                        else {
+                            alert("You Are Not An Admin")
+                            throw new Error("You Are Not An Admin")
+                        }
+                    })
+                    .catch(error => console.log(error))
+            }
+            else {
+                alert("Please Enter Valid Credential")
+            }
+        });
+    </script>
+
+</body>
+</html>
+

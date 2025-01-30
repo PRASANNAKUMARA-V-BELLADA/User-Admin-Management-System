@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <style>
+        button,#csbm {
+            background-color: deeppink;
+            border-radius: 6px;
+            color:wheat;
+            padding:10px;
+        }
+            #csbm:hover {
+                width: 215px;
+                height: 45px;
+                background-color: orangered;
+            }
+
+            button:hover {
+                width:145px;
+                height: 45px;
+                background-color: orangered;
+            }
+        hr{
+            color:rebeccapurple;
+            height:20px;
+            background-color:firebrick;
+        }
+        h1{
+            text-align:center;
+            font-family:cursive;
+        }
+        body {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    <div id="usr"></div>
+    <hr />
+    <form id="cfrm">
+        <input type="hidden" id="id" value="{{id}}" />
+        <button id="csbm" type="submit">Please Complete Your Profile</button>
+    </form>
+    <script>
+        document.getElementById("cfrm").addEventListener('submit', function (event) {
+            event.preventDefault()
+            let id = document.getElementById("id").value
+            console.log("///", id, "Hi")
+            if (id) {
+                window.location.href = `/complete-madu/${id}`
+            } else {
+                alert('Your Click Not proceeding');
+            }
+        })
+    </script>
+    <script>
+        window.addEventListener('load', function () {
+            let id = {{id}};
+            fetch(`/getUser/${id}`)
+                .then(response => {
+                    console.log("------", response.statusText)
+                    if (!response.ok) {
+                        throw new Error("Error: " + response.status + "::" + response.statusText)
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data.name)
+                    let htmlcnt = `<h1>Welcome To User ${data["name"]}`;
+                    document.getElementById("usr").innerHTML = htmlcnt
+                })
+                .catch(error => {
+                    alert("Your Not Registered Yet")
+                    window.location.href = '/';
+                })
+        });
+
+    </script>
+
+    <br /><br />
+    <form id="frm">
+        <input type="hidden" id="id" value="{{id}}" />
+        <button type="submit">View Your Details</button>
+    </form>
+    <script>
+        document.getElementById("frm").addEventListener('submit', function (event) {
+            event.preventDefault()
+            let id = document.getElementById("id").value
+            console.log("///", id, "Hi")
+            if (id) {
+                this.action = `/View-emp/${id}`
+                this.submit()
+            } else {
+                alert('Your Click Not proceeding');
+            }
+        })
+    </script>
+
+</body>
+</html>
+
+

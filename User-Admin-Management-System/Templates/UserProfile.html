@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Completion Page</title>
+    <style>
+        body {
+            display:flex;
+           flex-direction:column;
+           justify-content:center;
+           align-items:center;
+           min-height:108vh;
+            background-color: orangered;
+        }
+        .btn{
+            text-align:center;
+        }
+        #myForm {
+            background-color: yellow;
+            border: 2px solid blue;
+            padding: 10px;
+            width: 400px;
+        }
+
+        #sbm {
+            background-color: blue;
+            color: papayawhip;
+            padding: 10px;
+            border-radius: 7px;
+        }
+
+            #sbm:hover {
+                background-color: green;
+                width: 80px;
+                height: 40px;
+                color: white;
+            }
+        h3{
+            color:blue;
+            font-family:Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="cnt">
+        <form id="myForm" enctype="multipart/form-data">
+            <h3>Complete Your Profile Information</h3>
+            <input type="hidden" name="id" id="uid" value="{{ id }}">
+            <label>Enter Your Email:</label>
+            <input type="email" id="email" name="email" />
+            <br /><br />
+            <label>Enter The Phone Number:</label>
+            <input type="number" id="pno" name="pno" />
+            <br /><br />
+            <label>Now Upload Your Resume:</label>
+            <input type="file" id="file" name="file" />
+            <br /><br />
+            <div class="btn"><input id="sbm" type="submit" placeholder="UploadEmp"></div>
+        </form>
+    </div>
+    <script>
+          document.getElementById('myForm').addEventListener('submit', function (event) {
+          event.preventDefault();
+          console.log("Hiiiiii")
+          let formdata = new FormData()
+          let fileinfo = document.getElementById('file')
+          let email = document.getElementById('email').value
+          let pno = document.getElementById('pno').value
+          let id = document.getElementById("uid").value
+
+          if (fileinfo.files.length > 0) {
+              if (email.length > 0 && pno.length > 0) {
+                  formdata.append('file', fileinfo.files[0])
+                  formdata.append('email', email)
+                  formdata.append('pno', pno)
+                  console.log(email.value, pno.value, formdata)
+                  fetch(`/uploadFile/${id}`, {
+                      method: 'POST',
+                      body: formdata
+                  })
+                      .then(response => {
+                          if (response.ok) {
+                              return response.json(); // Parse the JSON response if status is OK
+                          } else {
+                              return response.json().then(errorData => {
+                                  alert(errorData.Message)
+                                  throw new Error(errorData.Message)
+                              })
+                          }
+                      })
+                      .then(data => {
+                          alert("File Uploaded Successfully")
+                          window.location.href = `/user-hogu/${id}`;
+                      })
+                      .catch(error => {
+                          console.log(error)
+                          console.error("--error end---", error)
+                          window.location.href =`/user-hogu/${id}`
+                      });
+              }
+              else {
+                  alert("You Only Chosen File,Not Entered All Valid Credential")
+              }
+          }
+          else { alert("You Not Choosen Any File"); }
+
+      });
+  </script>
+</body>
+</html>

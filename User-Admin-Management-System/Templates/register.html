@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body{
+            background-color:aqua;
+            align-content:center;
+            justify-items:center;
+            min-height:108vh;
+        }
+        h1{
+            text-align:center;
+            font-family:'Franklin Gothic';
+            color:orangered;
+        }
+        button{
+            background-color:orange;
+        }
+        button:hover{
+            background-color:yellow;
+            width:65px;
+            height:30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome To Registration Page</h1>
+    <form id="myform" style="border:2px solid  red; padding:10px;">
+        <label>Enter The User Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter Your Name"/>
+        <br><br>
+        <label>Enter The Role:</label> 
+        <select id="role">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select>
+        <br /><br />
+        <label>Enter The password:</label>
+        <input type="password" id="psd" name="password" placeholder="Enter Your Password"/>
+        <br /><br />
+        <button type="submit">Register</button>
+    </form>
+    <script>
+        document.getElementById("myform").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById("name").value,
+                role: document.getElementById("role").value,
+                password: document.getElementById("psd").value
+            }
+            console.log("creating form", formData)
+            fetch('/register', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => { throw new Error(errorData.message) })
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data); alert("Your Registration is Successful");
+                    window.location.href = '/'
+                })
+                .catch(error => alert(error))
+
+        });
+
+    </script>
+
+</body>
+</html>

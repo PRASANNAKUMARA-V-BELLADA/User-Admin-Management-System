@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Details Of Employee</title>
+    <style>
+        h1 {
+            font-family: cursive;
+            color: navy;
+        }
+
+        body {
+            background-color: aqua;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 108vh;
+        }
+
+
+        #cnt {
+            padding: 10px;
+            background-color: yellow;
+            margin: 10px;
+        }
+
+        #view {
+            background-color: palegreen;
+            border: 2px solid blue;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        #update {
+            background-color: lightpink;
+            border: 2px solid blue;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        #delete {
+            background-color: sandybrown;
+            border: 2px solid blue;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        #lagout {
+            text-align: end;
+            margin-right: 70px;
+        }
+
+        #lgo {
+            background-color: purple;
+            padding:10px;
+            color:wheat;
+            border-radius:6px;
+        }
+
+            #lgo:hover {
+                background-color: chartreuse;
+                width: 80px;
+                height: 43px;
+                color:blue;
+                font-weight:bold;
+            }
+        /* Now Applying Css To Table*/
+        #tcnt {
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+            #tcnt thead tr {
+                background-color: hotpink;
+                text-align: left;
+                font-weight: bold;
+                font-family: 'Javanese Text';
+            }
+
+            #tcnt th,
+            #tcnt td {
+                padding: 12px 15px;
+            }
+
+                #tcnt tbody tr:nth-of-type(even) {
+                    background-color: red;
+                    color: antiquewhite;
+                }
+
+        .updateBtn, .deleteBtn, .viewBtn {
+            background-color: aqua;
+            border-radius: 6px;
+        }
+
+            .updateBtn:hover, .deleteBtn:hover, .viewBtn:hover {
+                background-color: deeppink;
+                color: white;
+            }
+    </style>
+
+</head>
+<body>
+    <h1>View Contents Here</h1>
+    <div id="cnt">
+
+    </div>
+    <br /><br />
+    <div id="lagout"><button id="lgo" type="submit">Lagout</button></div>
+    <script>
+        document.getElementById("lgo").addEventListener('click', function () {
+            window.location.href = '/';
+        });
+    </script>
+    <script>
+        window.addEventListener('load', function () {
+            fetchData();
+        });
+        function fetchData() {
+            let id = {{id}};
+            console.log("++++",id)
+            fetch(`/get-emp/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            alert(errorData.message)
+                            const hold = document.getElementById("cnt");
+                            hold.innerHTML = "<p>To view information please complete your profile first</p>"
+                            throw new Error(errorData.message)
+                        })
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data)
+                    const employees = data["Message"];
+                    var eid = employees.id;
+                    console.log(eid,".........")
+                    console.log(employees + ")))))))")
+                    const hold = document.getElementById("cnt");
+                    if (employees.length === 0) {
+                        console.log("+-+-----+++___")
+                        hold.innerHTML = "<p>You Not Filled Any Information Yet</p>"
+                        return;
+                    }
+                    console.log("-----------")
+                    let htmlContent = "<table id='tcnt'><thead><tr><th>ID</th><th>NAME</th><th>ROLE</th><th>EMAIL</th><th>PHONE-NO</th><th>FILENAME</th><th>UPDATE</th><th>DELETE</th><th>UPDATE</th></tr></thead><tbody>"
+                    employees.forEach(employee => {
+                        htmlContent += `<tr>
+                                <td id="id">${employee.id}</td >
+                                <td id="name">${employee.name}</td>
+                                <td id="role">${employee.role}</td>
+                                <td id="email">${employee.email}</td>
+                                <td id="pno">${employee.pno}</td>
+                                <td id="filename">${employee.filename}</td>
+                                <td><button class="updateBtn" data-id="${employee.id}" data-role="${employee.role}" data-email="${ employee.email } " data-pno="${ employee.pno } " data-filename="${ employee.filename } ">Update</button></td>
+                                 <td><button class="deleteBtn" data-id="${employee.id}">Delete</button></td>
+                                 <td><button class="viewBtn" data-id="${employee.id}">ViewFile</button></td>
+                                 </tr>`;
+                    });
+                    htmlContent += "</tbody></table>";
+                    hold.innerHTML = htmlContent;
+                    //Now this Is For UpdateButton
+                    document.querySelectorAll(".updateBtn").forEach(button => {
+                        button.addEventListener("click", function () {
+                            let id = this.getAttribute("data-id")
+                            let role = this.getAttribute("data-role")
+                            let email = this.getAttribute("data-email");
+                            let pno = this.getAttribute("data-pno");
+                            let filename = this.getAttribute("data-filename");
+                            window.location.href = `/Update-Emp/${id}/${role}/${email}/${pno}/${filename}`;
+                        });
+                    });
+                    document.querySelectorAll(".deleteBtn").forEach(button => {
+                        button.addEventListener("click", function () {
+                            let id = this.getAttribute("data-id")
+                            fetch(`/delete/${id}`, {
+                                method: 'DELETE'
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error("Error" + response.status)
+                                    }
+                                    return response.json()
+                                })
+                                .then(data => { alert(id+"=> Deleted Successfully") })
+                                .catch(error => alert(id+"=>Not Deleted", error))
+                        });
+                    });
+
+                    document.querySelectorAll(".viewBtn").forEach(button => {
+                        button.addEventListener("click", function () {
+                            let id = this.getAttribute("data-id")
+                            console.log("<<", id)
+                            if (id) {
+                                window.location.href = `/res/${id}`
+                            } else {
+                                alert('Please enter an ID');
+                            }
+                        });
+                    });
+
+                    console.log("You recieved All employees")
+                })
+                .catch(error => {
+                    setTimeout(() => window.location.href = `/user-hogu/${id}`,5000 )
+                    console.log(error)
+                })
+        }
+    </script>
+
+
+</body>
+</html >

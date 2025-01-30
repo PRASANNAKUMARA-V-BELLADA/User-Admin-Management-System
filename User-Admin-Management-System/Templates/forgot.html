@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForgotPassword Page</title>
+    <style>
+        button {
+            background-color: blue;
+            border-radius:10px;
+            padding:10px;
+            color:white;
+        }
+
+            button:hover {
+                width: 155px;
+                height: 50px;
+                background-color:orangered;
+                color:wheat;
+            }
+            h2{
+                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode';
+                color:blue;
+            }
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: blueviolet;
+        }
+
+        #content {
+            background-color: violet;
+            border: 2px solid brown;
+            padding: 10px;
+            text-align: center;
+            border-radius:10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h2>Change Your Password By Using Name</h2>
+        <form>
+            <br />
+            <label>Enter The Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter Your Name"/>
+            <br /><br />
+            <label>Please Enter The New Password:</label>
+            <input type="password" id="cpsd" name="password" placeholder="Enter Your Password"/>
+            <br /><br />
+            <button type="button" onclick="changePassword()">Change Password</button>
+        </form>
+    </div>
+    <script>
+        function changePassword() {
+            console.log(key,"------------")
+            const formData = {
+                name: document.getElementById("name").value,
+                password: document.getElementById("cpsd").value
+            }
+            if (formData.name != "" && formData.password != "") {
+                console.log("hi")
+                fetch(`/changePassword`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Error: " + response.status + "::" + response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .then(data => alert("Password Updated Successfully"))
+                    .catch(error => { alert("Password was not changed", error) })
+            }
+            else {
+                alert("Please Enter Valid Credential")
+            }
+        }
+    </script>
+</body>
+</html>

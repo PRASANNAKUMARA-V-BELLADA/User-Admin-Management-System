@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        body{
+            background-color:lightpink;
+        }
+        table{
+            background-color:yellow;
+            border:2px solid double;
+        }
+        #lagout{
+            text-align:end;
+            margin-right:70px;
+            padding:20px;
+        }
+        #adm{
+            font-family:'Franklin Gothic';
+            color:green;
+        }
+        #lgo{
+            background-color:purple;
+            border-radius:6px;
+            color:aliceblue;
+            padding:10px;
+        }
+        #lgo:hover{
+            background-color:darkgoldenrod;
+            width:60px;
+            height:43px;
+        }
+        #nav{
+            display:flex;
+            flex-direction:row;
+            justify-content:space-between;
+            padding:10px;
+            margin:0px;
+            background-color:rgb(182, 255, 0)
+        }
+        #adminPassword{
+            background-color:aqua;
+            padding:7px;
+            border-radius:6px;
+            color:midnightblue;
+        }
+        p{
+            color:red;
+        }
+            #adminPassword:hover {
+                background-color: blue;
+                width: 150px;
+                height: 40px;
+                color: antiquewhite;
+            }
+
+     /* Now Applying Css To Table*/
+        #tcnt {
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+     #tcnt thead tr{
+         background-color:hotpink;
+         text-align:left;
+         font-weight:bold;
+         font-family:'Javanese Text';
+     }
+     #tcnt th,
+     #tcnt td{
+         padding:12px 15px;
+     }
+     #tcnt tbody tr{
+         border-bottom:2px solid blue;
+     }
+     #tcnt tbody tr:nth-of-type(even){
+         background-color:red;
+         color:antiquewhite;
+     }
+        .updateBtn, .deleteBtn,.viewBtn{
+            background-color:aqua;
+            border-radius:6px;
+        }
+        .updateBtn:hover, .deleteBtn:hover , .viewBtn:hover{
+            background-color:deeppink;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+    <div id="nav">
+        <div id="adm"></div>
+        <div id="lagout"><button id="lgo" type="submit">Lagout</button></div>
+      </div>
+    <br />
+        <a href="#" onclick="retrieveAll(); return false;">Click Here To Vew All Employees</a>
+        <br /><br />
+
+        <script>
+            document.getElementById("lgo").addEventListener('click', function () {
+                window.location.href = '/';
+            });
+        </script>
+
+        <button id="adminPassword">ChangeYourPassword</button>
+        <script>
+            document.getElementById("adminPassword").addEventListener('click', function () {
+                window.location.href = "/Update-Admin"
+            })
+        </script>
+        <br /><br />
+        <div id="vw"></div>
+        <br /><br />
+        <script>
+            window.addEventListener('load', function () {
+                fetch('/getAdmin')
+                    .then(response => {
+                        console.log("------", response.statusText)
+                        if (!response.ok) {
+                            throw new Error("Error: " + response.status + "::" + response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        console.log(data.name)
+                        let htmlcnt = `<h1>Welcome To Admin ${data["name"]}`;
+                        document.getElementById("adm").innerHTML = htmlcnt
+                    })
+                    .catch(error => alert("Admin Not Found"))
+            });
+            function retrieveAll() {
+                console.log("Hi")
+                fetch('/getAll')
+                    .then(response => response.json())
+                    .then(data => {
+                        const employees = data["Message"];
+                        const cnt = document.getElementById("vw");
+                        if (employees.length === 0) {
+                            cnt.innerHTML = "<p>No Employees Are there..</p>"
+                            return;
+                        }
+                        let htmlContent = "<table id='tcnt'><thead><tr><th>ID</th><th>NAME</th><th>ROLE</th><th>EMAIL</th><th>PHONE.NO</th><th>FILENAME</th><th>UPDATE</th><th>DELETE</th><th>UPDATE</th></tr></thead><tbody>"
+                        employees.forEach(employee => {
+                            htmlContent += `<tr>
+                                            <td>${employee.id}</td >
+                                            <td>${employee.name}</td>
+                                            <td>${employee.role}</td>
+                                            <td>${employee.email}</td>
+                                            <td>${employee.pno}</td>
+                                            <td>${employee.filename}</td>
+                                            <td><button class="updateBtn" data-id="${employee.id}"  data-email="${employee.email} " data-pno="${employee.pno} " data-filename="${employee.filename} ">Update</button></td>
+                                            <td><button class="deleteBtn" data-id="${employee.id}">Delete</button></td>
+                                            <td><button class="viewBtn" data-id="${employee.id}">ViewFile</button></td>
+                                          </tr>`;
+                        });
+                        htmlContent += "</tbody></table>";
+                        cnt.innerHTML = htmlContent;
+                        document.querySelectorAll(".updateBtn").forEach(button => {
+                            button.addEventListener("click", function () {
+                                let id = this.getAttribute("data-id")
+                                let email = this.getAttribute("data-email");
+                                let role = 'admin'
+                                let pno = this.getAttribute("data-pno");
+                                let filename = this.getAttribute("data-filename");
+                                window.location.href = `/Update-Emp/${id}/${role}/${email}/${pno}/${filename}`;
+                            });
+                        });
+                        document.querySelectorAll(".deleteBtn").forEach(button => {
+                            button.addEventListener("click", function () {
+                                let id = this.getAttribute("data-id")
+                                fetch(`/delete/${id}`, {
+                                    method: 'DELETE'
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error("Error" + response.status)
+                                        }
+                                        return response.json()
+                                    })
+                                    .then(data => { alert(id + "=>Deleted Successfully") })
+                                    .catch(error => alert(id + "=>Not Deleted", error))
+                            });
+                        });
+
+                        document.querySelectorAll(".viewBtn").forEach(button => {
+                            button.addEventListener("click", function () {
+                                let id = this.getAttribute("data-id")
+                                console.log("<<", id)
+                                if (id) {
+                                    window.location.href = `/res/${id}`
+                                } else {
+                                    alert('Please enter an ID');
+                                }
+                            });
+                        })
+                        console.log("You recieved All employees")
+                    })
+                    .catch(error => alert("Your data Not Retriewed"))
+            }
+        </script>
+</body>
+</html>
+
+
+

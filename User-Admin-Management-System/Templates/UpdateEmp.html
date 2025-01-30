@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Details Of Employee</title>
+    <style>
+        body{
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            background-color:yellow;
+        }
+        div{
+            background-color:aqua;
+            padding:10px;
+            font-family:Arial;
+        }
+        #sbt {
+            text-align: center;
+        }
+        #sbm{
+            padding:10px;
+            background-color:hotpink;
+            border-radius:6px;
+        }
+        #sbm:hover{
+            background-color:red;
+            width:70px;
+            height:40px;
+            color:white;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="update">
+        <form id="updform">
+            <h3>To Update Any Field Try Now:</h3>
+            <input type="hidden" id="fid" value="{{id}}" />
+            <label>Leave Empty Or Update Email:</label>
+            <input type="email" id="email" value="{{email}}" />
+            <br /><br />
+            <label>Leave Empty Or Update Phone Number:</label>
+            <input type="number" id="pno" value="{{pno}}"/>
+            <br /><br />
+            <label>Leave Empty Or Update File Name:</label>
+            <input type="text" id="filename" value="{{filename}}" />
+            <br /><br />
+            <label>Leave Empty Or Upload File:</label>
+            <input type="file" id="file" />
+            <br /><br />
+            <div id="sbt"><input id="sbm" type="submit"></div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('updform').addEventListener('submit', function (event) {
+            event.preventDefault();
+            console.log("Hiiiiii")
+            var id = document.getElementById('fid').value;
+            if (id) {
+                let formdata = new FormData()
+                let fileinfo = document.getElementById('file')
+                let email = document.getElementById('email')
+                let pno = document.getElementById('pno')
+                let filename = document.getElementById('filename').value
+                if (filename) {
+                    if (filename.includes(".pdf")) {
+                        filename = filename;
+                    }
+                    else {
+                        filename = filename + ".pdf"
+                    }
+                }
+
+                if (fileinfo.files.length > 0) { formdata.append('file', fileinfo.files[0]) }
+
+                formdata.append('email', email.value)
+                formdata.append('pno', pno.value)
+                formdata.append('filename', filename)
+                console.log(email.value, pno.value, formdata)
+                fetch(`/updateEmp/${id}`, {
+                    method: 'PUT',
+                    body: formdata
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json(); // Parse the JSON response if status is OK
+                        } else {
+                            throw new Error('Error: ' + response.status);
+                        }
+                    })
+                    .then(data => {
+                        alert("Employee information updated Successfully");
+                        let role = "{{role }}"
+                        if (role.toLowerCase() == 'admin') {
+                            window.location.href = `/admin-hogu/${id}`
+                        }
+                        else {
+                            window.location.href =`/View-emp/${id}`
+                        }
+                    })
+                    .catch(error => {
+                        alert("Employee Updation is Failed ", error)
+                    });
+            }
+            else {
+                alert("You Not Entered Id")
+            }
+
+        });
+    </script>
+</body>
+</html>
